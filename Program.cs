@@ -1,9 +1,6 @@
 ﻿using System;
 namespace Sharper{
     public class Sharper{
-        public static void Dump(string value){
-            Console.WriteLine(value);
-        }
         public static void Main(string[] args){
             if(args.Length != 0){
                 switch(args[0]){

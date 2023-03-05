@@ -6,11 +6,19 @@ namespace Sharper{
         public static int Run(string path){
             string? line;
             string[]? op;
-            string[] fileName = path.Split('/');
-            string ext = fileName[fileName.Length -1].Split(".")[1];
+            string[] fullPath = path.Split('/');
+            string fileName = path.Split('/').Last();
+            string ext = fileName.Split(".")[1];
+            Array.Resize(ref fullPath, fullPath.Length - 1);
+            string location = string.Join("/", fullPath);
             if(ext != "shr"){
                 return -1;
             }
+
+            using StreamWriter sw = new StreamWriter($"{location}/{fileName}.asm");
+
+            
+
             StreamReader sr = new StreamReader(path);
             line = sr.ReadLine();
             int lineNumber = 0;
@@ -48,7 +56,7 @@ namespace Sharper{
                 }
                 line = sr.ReadLine();
             }
-            
+            sw.Close();
             return 0;
         }
     }
