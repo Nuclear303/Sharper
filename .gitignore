@@ -1,2 +1,5 @@
 *.shr
 .vscode
+/obj
+/bin
+*.csproj
