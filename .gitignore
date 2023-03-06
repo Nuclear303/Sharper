@@ -2,5 +2,7 @@
 .vscode/
 obj/
 bin/
-*.csproj
+Sharper.csproj
 *.asm
+*.o
+exec
