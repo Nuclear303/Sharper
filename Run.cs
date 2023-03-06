@@ -1,59 +1,58 @@
+using Newtonsoft.Json;
+using System.Xml;
+using System.Diagnostics;
+
 namespace Sharper{
     public class Runner{
-        public static void Dump(string value){
+        public static string? filePath;
+        public static void Dump(StreamWriter sw, string value){
             Console.Write(value);
         }
         public static int Run(string path){
-            string? line;
-            string[]? op;
+            filePath = path;
             string fileName = path.Split('/').Last();
             string ext = fileName.Split(".")[1];
             if(ext != "shr"){
                 return -1;
             }
-
+            var json = JsonConvert.SerializeObject(Tokenizer.Tokenize(), Newtonsoft.Json.Formatting.Indented);
+            Console.WriteLine(json);        
             using StreamWriter sw = new StreamWriter($"./{fileName.Split('.')[0]}.asm",false);
-            sw.WriteLine("global .start");
+            sw.Write("section .data\n");
+            sw.WriteLine(Tokenizer.dotdata);
+            string[] textToWrite = Tokenizer.dotdata.Split("\n");
             
-
-            StreamReader sr = new StreamReader(path);
-            line = sr.ReadLine();
-            int lineNumber = 0;
-            while(line is not null){
-                lineNumber++;
-                op = line.Split(' ', 2, StringSplitOptions.None);
-                switch(op[0]){
-                    case "print": {
-                        try{
-                            if(op[1] == ""){
-                                Console.WriteLine("ERROR: Brak zawartego argumentu funkcji w linii {0}",lineNumber);
-                                return -1;
-                            }
-                            Dump(op[1]);    
-                        }catch(IndexOutOfRangeException){
-                            Console.WriteLine("ERROR: Brak zawartego argumentu funkcji w linii {0}",lineNumber);
-                            return -1;
+            sw.WriteLine("section .text");
+            sw.WriteLine("\tglobal _start");
+            sw.WriteLine("_start:");
+            foreach (var line in textToWrite)
+            {
+                if(line != string.Empty){
+                    string stringName = line.Split(" ")[0];
+                    string value = line.Split(" ")[2].Substring(1, line.Split(" ")[2].Length - 2);
+                    if(stringName != string.Empty){
+                        sw.WriteLine("\tmov rax, 1");         
+                        sw.WriteLine("\tmov rdi, 1");         
+                        sw.WriteLine($"\tmov rsi, {stringName.Trim()}");
+                        if(line.Split(" ")[3].Contains("0xA")){
+                            sw.WriteLine($"\tmov rdx, {value.Length}");         
                         }
-                        
-                        break;
-                    }
-                    case "println":{
-                        try{
-                            if(op[1] == ""){
-                                Console.WriteLine("ERROR: Brak zawartego argumentu funkcji {0} w linii {1}",op[0],lineNumber);
-                                return -1;
-                            }
-                            Dump(op[1]+"\n");    
-                        }catch(IndexOutOfRangeException){
-                            Console.WriteLine("ERROR: Brak zawartego argumentu funkcji {0} w linii {1}",op[0],lineNumber);
-                            return -1;
+                        else
+                        {
+                            sw.WriteLine($"\tmov rdx, {value.Length}");  
                         }
-                        break;
-                        }
+                        sw.WriteLine("\tsyscall\n");
+                    }     
                 }
-                line = sr.ReadLine();
+                 
             }
+            
+            sw.WriteLine("\tmov rax, 60");
+            sw.WriteLine("\tmov edi, 0");
+            sw.WriteLine("\tsyscall");
             sw.Close();
+
+
             return 0;
         }
     }
