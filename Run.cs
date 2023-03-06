@@ -6,17 +6,14 @@ namespace Sharper{
         public static int Run(string path){
             string? line;
             string[]? op;
-            string[] fullPath = path.Split('/');
             string fileName = path.Split('/').Last();
             string ext = fileName.Split(".")[1];
-            Array.Resize(ref fullPath, fullPath.Length - 1);
-            string location = string.Join("/", fullPath);
             if(ext != "shr"){
                 return -1;
             }
 
-            using StreamWriter sw = new StreamWriter($"{location}/{fileName}.asm");
-
+            using StreamWriter sw = new StreamWriter($"./{fileName.Split('.')[0]}.asm",false);
+            sw.WriteLine("global .start");
             
 
             StreamReader sr = new StreamReader(path);
