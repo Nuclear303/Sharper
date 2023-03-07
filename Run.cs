@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using System.Xml;
+
 using System.Diagnostics;
 
 namespace Sharper{
@@ -34,13 +34,7 @@ namespace Sharper{
                         sw.WriteLine("\tmov rax, 1");         
                         sw.WriteLine("\tmov rdi, 1");         
                         sw.WriteLine($"\tmov rsi, {stringName.Trim()}");
-                        if(line.Split(" ")[3].Contains("0xA")){
-                            sw.WriteLine($"\tmov rdx, {value.Length}");         
-                        }
-                        else
-                        {
-                            sw.WriteLine($"\tmov rdx, {value.Length}");  
-                        }
+                        sw.WriteLine($"\tmov rdx, {value.Length}");         
                         sw.WriteLine("\tsyscall\n");
                     }     
                 }
