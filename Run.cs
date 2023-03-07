@@ -5,9 +5,6 @@ using System.Diagnostics;
 namespace Sharper{
     public class Runner{
         public static string? filePath;
-        public static void Dump(StreamWriter sw, string value){
-            Console.Write(value);
-        }
         public static int Run(string path){
             filePath = path;
             string fileName = path.Split('/').Last();
@@ -15,8 +12,7 @@ namespace Sharper{
             if(ext != "shr"){
                 return -1;
             }
-            var json = JsonConvert.SerializeObject(Tokenizer.Tokenize(), Newtonsoft.Json.Formatting.Indented);
-            Console.WriteLine(json);        
+            Tokenizer.Tokenize();
             using StreamWriter sw = new StreamWriter($"./{fileName.Split('.')[0]}.asm",false);
             sw.Write("section .data\n");
             sw.WriteLine(Tokenizer.dotdata);
