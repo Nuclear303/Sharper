@@ -20,7 +20,7 @@ namespace Sharper{
           switch(operation){
             case "print":{
               if(arguments.Length != 1){
-                Console.WriteLine($"Error in line {lineNumber}: Print requires 1 argument to the function, Provided {arguments.Length} arguments");
+                Console.WriteLine($"Error in line {lineNumber}: print requires 1 argument to the function, Provided {arguments.Length} arguments");
               }
               else{
                 dotdata+=$"\tstring{lineNumber} db '{arguments[0]}' \n";
@@ -29,7 +29,7 @@ namespace Sharper{
             }
             case "println":{
               if(arguments.Length != 1){
-                Console.WriteLine($"Error in line {lineNumber}: Print requires 1 argument to the function, Provided {arguments.Length} arguments");
+                Console.WriteLine($"Error in line {lineNumber}: println requires 1 argument to the function, Provided {arguments.Length} arguments");
               }
               else{
                 dotdata+=$"\tstring{lineNumber} db '{arguments[0]}', 0xA, 0 \n";
