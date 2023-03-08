@@ -23,7 +23,15 @@ namespace Sharper{
                 Console.WriteLine($"Error in line {lineNumber}: print requires 1 argument to the function, Provided {arguments.Length} arguments");
               }
               else{
-                dotdata+=$"\tstring{lineNumber} db '{arguments[0]}' \n";
+                if((arguments[0].First() == '\'' && arguments[0].Last() == '\'') || (arguments[0].First() == '\"' && arguments[0].Last() == '\"')){
+                  dotdata+=$"\tstring{lineNumber} db '{arguments[0].Substring(1,arguments[0].Length-2)}' \n";
+                }
+                else if(double.TryParse(arguments[0], out _) || arguments[0] == "True" || arguments[0] == "False"){
+                  dotdata+=$"\tstring{lineNumber} db '{arguments[0]}' \n";
+                }
+                else{
+                  Console.WriteLine($"Error in line {lineNumber}: {arguments[0]} doesn't exist in this file");
+                }
               }
               break;
             }
@@ -32,7 +40,15 @@ namespace Sharper{
                 Console.WriteLine($"Error in line {lineNumber}: println requires 1 argument to the function, Provided {arguments.Length} arguments");
               }
               else{
-                dotdata+=$"\tstring{lineNumber} db '{arguments[0]}', 0xA, 0 \n";
+                if(((arguments[0].First() == '\'' && arguments[0].Last() == '\'') || (arguments[0].First() == '\"' && arguments[0].Last() == '\"'))){
+                  dotdata+=$"\tstring{lineNumber} db '{arguments[0].Substring(1,arguments[0].Length-2)}', 0xA, 0 \n";
+                }
+                else if(double.TryParse(arguments[0], out _) || arguments[0] == "True" || arguments[0] == "False"){
+                  dotdata+=$"\tstring{lineNumber} db '{arguments[0]}' \n";
+                }
+                else{
+                  Console.WriteLine($"Error in line {lineNumber}: {arguments[0]} doesn't exist in this file");
+                }
               }
               break;
             }
